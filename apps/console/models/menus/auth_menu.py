@@ -6,6 +6,7 @@ from .menu import Menu
 class AuthMenu(Menu):
     def __init__(self):
         super().__init__()
+        self.title: str = "Auth-Menu"
         self.running: bool = True
         self.title = "Auth-Menu"
         self.auth_client = auth_client
@@ -16,19 +17,12 @@ class AuthMenu(Menu):
         ]
 
     def _login(self):
-        self._print_header("Login")
-        username: str = self._get_user_choice("Please enter the username:")
-        password: str = self._get_user_choice("Please enter the password:")
-        self.auth_client.login(username, password)
+        self.auth_client.login()
         if self.auth_client.is_authenticated():
             self.running = False
 
     def _register(self):
-        self._print_header("Registration")
-        username: str = self._get_user_choice("Please enter the username:")
-        pw1: str = self._get_user_choice("Please enter the password:")
-        pw2: str = self._get_user_choice("Please confirm the password:")
-        self.auth_client.register(username, pw1, pw2)
+        self.auth_client.register()
         if self.auth_client.is_authenticated():
             self.running = False
 
@@ -37,4 +31,4 @@ class AuthMenu(Menu):
         return
 
     def __repr__(self):
-        return super().__repr__() + f" | Auth-Client: {self.auth_client}"
+        return super().__repr__() + f"Auth-Client: {self.auth_client}"

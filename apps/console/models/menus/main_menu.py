@@ -7,7 +7,6 @@ from .game_menu import GameMenu
 class MainMenu(Menu):
     def __init__(self):
         super().__init__()
-        self.running = True
         self.title = "Main-Menu"
         self.auth_client = auth_client
         self.cfg_client = ConfigClient()
@@ -60,5 +59,5 @@ class MainMenu(Menu):
     def __repr__(self):
         return (
             super().__repr__()
-            + f" | Auth-Client: {self.auth_client} | Config-Client: {self.cfg_client}"
+            + f"Auth-Client: {self.auth_client} | Config-Client: {self.cfg_client}"
         )

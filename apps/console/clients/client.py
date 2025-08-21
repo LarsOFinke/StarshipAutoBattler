@@ -70,4 +70,4 @@ class Client(ABC):
             self._match_choice(choice, self.action_list)
 
     def __repr__(self) -> str:
-        return f"{self.title} "
+        return f"{self.title} - Running: {self.running} | Selecting: {self.selecting} | "

@@ -177,4 +177,4 @@ class ConfigClient(Client):
     # -- Public API -- #
 
     def __repr__(self):
-        return super().__repr__() + f"- Config-Service: {self.cfg_service}"
+        return super().__repr__() + f"Config-Service: {self.cfg_service}"
