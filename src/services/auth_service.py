@@ -4,21 +4,29 @@ from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from .logger_service import log, log_duration
-from .database_service import database_service
-from ..models.user import User
 from ..utils.constants import SALT_BYTES, ITERATIONS, ALG
 
+from .logger_service import log, log_duration
+from .database_service import database_service
 
-class AuthService:
+from .service import Service
+from ..models.user import User
+
+
+class AuthService(Service):
+    @log_duration
     def __init__(self):
+        self.title: str = "Auth-Service"
         self.database_service = database_service
         self._authenticated: bool = False
         self.user_id: int = 0
         self.username: str = ""
         self.user_created_at: str = ""
-        log(self, "dev-info")
+        log(f"Auth-Service initialised - {self}", "dev-info")
 
+    # -- Helpers -- #
+
+    @log_duration
     def _password_checks(self, pw1, pw2) -> bool:
         log("Checking passwords.", "dev-info")
         if pw1 == pw2:
@@ -27,6 +35,7 @@ class AuthService:
         log("Password check failed.", "warning")
         return False
 
+    @log_duration
     def _hash_password(self, password: str) -> str:
         log("Hashing password.", "dev-info")
         salt = secrets.token_bytes(SALT_BYTES)
@@ -38,6 +47,7 @@ class AuthService:
             f"{base64.b64encode(dk).decode()}"
         )
 
+    @log_duration
     def _verify_password(self, password: str, stored: str) -> bool:
         log("Starting verify-password.", "dev-info")
         try:
@@ -55,12 +65,14 @@ class AuthService:
             log(f"Verify-password failed. {e}", "error")
             return False
 
+    @log_duration
     def _get_user_by_name(self, session, name: str) -> Optional[User]:
         log("Getting user by name.", "dev-info")
         stmt = select(User).where(User.name == name)
         log("User found", "dev-info")
         return session.scalar(stmt)
 
+    @log_duration
     def _process_authentication(self, user) -> None:
         log("Starting processing authentication.", "dev-info")
         self.user_id = user.id
@@ -70,6 +82,9 @@ class AuthService:
         log(f"Authenticaton processed. {self}", "dev-info")
         return
 
+    # -- Public API -- #
+
+    @log_duration
     def is_authenticated(self):
         return self._authenticated
 
@@ -111,4 +126,7 @@ class AuthService:
             return False
 
     def __repr__(self):
-        return f"Database-Service: {self.database_service} | Authenticated: {self.is_authenticated()} | User-ID: {self.user_id} | Username: {self.username} | User created at: {self.user_created_at}"
+        return (
+            super().__repr__()
+            + f"Database-Service: {self.database_service} | Authenticated: {self.is_authenticated()} | User-ID: {self.user_id} | Username: {self.username} | User created at: {self.user_created_at}"
+        )

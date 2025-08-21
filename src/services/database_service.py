@@ -8,13 +8,17 @@ from .logger_service import log, log_duration
 from ..config import DATABASE_URL
 from ..models.orm_base import Base
 
+from .service import Service
 
-class DatabaseService:
+
+class DatabaseService(Service):
     def __init__(self):
+        self.title: str = "Database-Service"
         self.engine = create_engine(DATABASE_URL, echo=False, future=True)
         self.session = sessionmaker(
             bind=self.engine, autoflush=False, autocommit=False, future=True
         )
+        log(f"Database-Service initialised - {self}", "dev-info")
 
     # ---------- Session Helper ----------
     @log_duration
@@ -49,7 +53,7 @@ class DatabaseService:
         log("Database initialized.")
 
     def __repr__(self):
-        return f"Engine: {self.engine} | Session: {self.session}"
+        return super().__repr__() + f"Engine: {self.engine} | Session: {self.session}"
 
 
 database_service = DatabaseService()

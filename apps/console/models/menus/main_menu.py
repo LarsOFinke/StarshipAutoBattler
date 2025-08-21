@@ -37,7 +37,7 @@ class MainMenu(Menu):
     def _stop_selecting_settings(self) -> None:
         self.selecting_settings = False
 
-    # -- ACTIONS -- #
+    # -- Actions -- #
 
     def _play(self):
         game_menu = GameMenu()
@@ -55,6 +55,8 @@ class MainMenu(Menu):
             self._print_actions(self.setting_actions)
             choice = self._get_user_choice()
             self._match_choice(choice, self.setting_actions)
+
+    # -- Public API -- #
 
     def __repr__(self):
         return (

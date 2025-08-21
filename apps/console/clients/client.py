@@ -28,7 +28,7 @@ class Client(ABC):
         self.title: str
         self.action_list: list[Action]
 
-    # ----- Helpers (concrete) -----
+    # -- Helpers -- #
 
     def _stop_selecting(self):
         self.selecting = False
@@ -51,7 +51,7 @@ class Client(ABC):
     def _print_actions(self, action_list: list[Action]) -> None:
         print_actions(action_list)
 
-    # ----- Public API -----
+    # -- Public API -- #
 
     def _stop(self):
         self.running = False
@@ -70,4 +70,6 @@ class Client(ABC):
             self._match_choice(choice, self.action_list)
 
     def __repr__(self) -> str:
-        return f"{self.title} - Running: {self.running} | Selecting: {self.selecting} | "
+        return (
+            f"{self.title} - Running: {self.running} | Selecting: {self.selecting} | "
+        )

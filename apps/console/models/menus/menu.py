@@ -28,7 +28,7 @@ class Menu(ABC):
         self.title: str
         self.action_list: list[Action]
 
-    # ----- Helpers (concrete) -----
+    # -- Helpers -- #
 
     def _stop_selecting(self):
         self.selecting = False
@@ -51,7 +51,7 @@ class Menu(ABC):
     def _print_actions(self, action_list: list[Action]) -> None:
         print_actions(action_list)
 
-    # ----- Public API -----
+    # -- Public API -- #
 
     def _stop(self):
         self.running = False

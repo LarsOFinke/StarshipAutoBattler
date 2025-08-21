@@ -5,13 +5,16 @@ from sqlalchemy.exc import IntegrityError
 from .logger_service import log, log_duration
 from .database_service import database_service
 
+from .service import Service
 from ..models.player_character import PlayerCharacter
 
 
-class PlayerService:
+class PlayerService(Service):
     def __init__(self) -> None:
+        self.title: str = "Player-Service"
         self.player: PlayerCharacter | None = None
         self.database_service = database_service
+        log(f"Player-Service initialised - {self}", "dev-info")
 
     def _get_player_character_by_name(self, name: str) -> PlayerCharacter | None:
         return self.player
@@ -28,4 +31,7 @@ class PlayerService:
         return
 
     def __repr__(self):
-        return f"Player: {self.player} | Database-Service: {self.database_service}"
+        return (
+            super().__repr__()
+            + f"Player: {self.player} | Database-Service: {self.database_service}"
+        )

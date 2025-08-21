@@ -11,6 +11,8 @@ class AuthClient(Client):
         self._username: str = ""
         self._user_created_at: str = ""
 
+    # -- Helpers -- #
+
     def _process_authentication(self) -> None:
         self._user_id = self.auth_service.user_id
         self._username = self.auth_service.username

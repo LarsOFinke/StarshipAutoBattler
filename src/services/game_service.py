@@ -1,9 +1,12 @@
 from .logger_service import log, log_duration
 
+from .service import Service
 
-class GameService:
+
+class GameService(Service):
     def __init__(self):
-        pass
-    
+        self.title: str = "Game-Service"
+        log(f"Game-Service initialised - {self}", "dev-info")
+
     def __repr__(self):
-        return f"GameService - "
+        return super().__repr__() + f""

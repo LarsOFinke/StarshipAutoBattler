@@ -1,14 +1,18 @@
 from configparser import ConfigParser
 
 from ..config import CONFIG_PATH
+
 from .logger_service import log, log_duration
 
+from .service import Service
 
-class ConfigService:
+
+class ConfigService(Service):
     def __init__(self):
+        self.title: str = "Config-Service"
         self.path: str = CONFIG_PATH
         self.cfg = self._setup_config()
-        log(self, "dev-info")
+        log(f"Config-Service initialised - {self}", "dev-info")
 
     def _setup_config(self):
         cfg = ConfigParser()
@@ -38,4 +42,4 @@ class ConfigService:
             log("Config successfully overwritten.")
 
     def __repr__(self):
-        return f"Path: {self.path} | Config: {self.cfg}"
+        return super().__repr__() + f"Path: {self.path} | Config: {self.cfg}"
