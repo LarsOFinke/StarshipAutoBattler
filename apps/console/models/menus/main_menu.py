@@ -17,22 +17,14 @@ class MainMenu(Menu):
             {"hotkey": "8", "name": "settings", "action": self._settings},
             {"hotkey": "0", "name": "logout", "action": self._logout},
         ]
+        self.setting_actions: list[dict[str:callable]] = [
+            {"hotkey": "1", "name": "Config settings", "action": self._config_settings},
+            {"hotkey": "0", "name": "Back", "action": self._stop_selecting},
+        ]
         self.config_setting_actions: list[dict[str:callable]] = [
-            {
-                "hotkey": "1",
-                "name": "Change Dev-Mode",
-                "action": self._change_dev_mode,
-            },
-            {
-                "hotkey": "2",
-                "name": "Change Log-Level",
-                "action": self._change_log_level,
-            },
-            {
-                "hotkey": "0",
-                "name": "Back",
-                "action": self._stop_selecting,
-            },
+            {"hotkey": "1", "name": "Dev-Mode", "action": self._change_dev_mode},
+            {"hotkey": "2", "name": "Log-Level", "action": self._change_log_level},
+            {"hotkey": "0", "name": "Back", "action": lambda: None},
         ]
 
     # -- HELPERS -- #
@@ -58,6 +50,12 @@ class MainMenu(Menu):
         choice: str = self._get_user_choice()
         self._match_choice(choice, self.cfg_client.log_level_actions)
 
+    def _config_settings(self):
+        self._print_menu_name("Settings")
+        self._print_actions(self.config_setting_actions)
+        choice = self._get_user_choice()
+        self._match_choice(choice, self.config_setting_actions)
+
     # -- ACTIONS -- #
 
     def _play(self):
@@ -73,9 +71,9 @@ class MainMenu(Menu):
         self.selecting: bool = True
         while self.selecting:
             self._print_menu_name("Settings")
-            self._print_actions(self.config_setting_actions)
+            self._print_actions(self.setting_actions)
             choice = self._get_user_choice()
-            self._match_choice(choice, self.config_setting_actions)
+            self._match_choice(choice, self.setting_actions)
 
     def _logout(self):
         self.running = False
