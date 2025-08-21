@@ -22,4 +22,7 @@ config = logger_service.get_logger_config(
 
 logger = logger_service.get_custom_logger(name="Logger", config=config)
 logger.log(logger, "dev-info")
+log = logger.log
+log_duration = logger.log_duration
+
 test_logger = logger_service.get_test_logger()

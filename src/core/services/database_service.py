@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from .logger_service import logger
+from .logger_service import log, log_duration
 from ...config import DATABASE_URL
 from ..models.orm_base import Base
 
@@ -17,30 +17,30 @@ class DatabaseService:
         )
 
     # ---------- Session Helper ----------
-    @logger.log_duration
+    @log_duration
     @contextmanager
     def db_session(self):
         with self.session.begin() as session:
-            logger.log("Starting DB-session.")
+            log("Starting DB-session.", "dev-info")
             try:
                 yield session
                 session.commit()
-                logger.log("DB-session successfully committed.")
+                log("DB-session successfully committed.", "dev-info")
             except:
                 session.rollback()
-                logger.log("DB-session rolled back.", "error")
+                log("DB-session rolled back.", "error")
                 raise
             finally:
                 session.close()
-                logger.log("DB-sessions closed.")
+                log("DB-sessions closed.", "dev-info")
 
-    @logger.log_duration
+    @log_duration
     def init_db(self):
-        logger.log("Initiatlizing the Database.")
+        log("Initiatlizing the Database.", "dev-info")
         from ..models import user
 
         Base.metadata.create_all(self.engine)
-        logger.log("Database initialized.")
+        log("Database initialized.", "dev-info")
 
     def __repr__(self):
         return f"Engine: {self.engine} | Session: {self.session}"

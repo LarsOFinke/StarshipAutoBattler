@@ -4,7 +4,7 @@ from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from .logger_service import logger
+from .logger_service import log, log_duration
 from .database_service import database_service
 from ..models.user import User
 from ..utils.constants import SALT_BYTES, ITERATIONS, ALG
@@ -17,21 +17,21 @@ class AuthService:
         self.user_id: int = 0
         self.username: str = ""
         self.user_created_at: str = ""
-        logger.log(self, "dev-info")
+        log(self, "dev-info")
 
     def _password_checks(self, pw1, pw2) -> bool:
-        logger.log("Checking passwords.")
+        log("Checking passwords.", "dev-info")
         if pw1 == pw2:
-            logger.log("Passwords match.")
+            log("Passwords match.", "dev-info")
             return True
-        logger.log("Password check failed.", "warning")
+        log("Password check failed.", "warning")
         return False
 
     def _hash_password(self, password: str) -> str:
-        logger.log("Hashing password.")
+        log("Hashing password.", "dev-info")
         salt = secrets.token_bytes(SALT_BYTES)
         dk = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, ITERATIONS)
-        logger.log("Password hashed.")
+        log("Password hashed.", "dev-info")
         return (
             f"{ALG}${ITERATIONS}$"
             f"{base64.b64encode(salt).decode()}$"
@@ -39,7 +39,7 @@ class AuthService:
         )
 
     def _verify_password(self, password: str, stored: str) -> bool:
-        logger.log("Starting verify-password.")
+        log("Starting verify-password.", "dev-info")
         try:
             alg, iter_str, b64_salt, b64_hash = stored.split("$", 3)
             if alg != ALG:
@@ -52,32 +52,33 @@ class AuthService:
             )
             return hmac.compare_digest(expected, candidate)
         except Exception as e:
-            logger.log(f"Verify-password failed. {e}", "error")
+            log(f"Verify-password failed. {e}", "error")
             return False
 
     def _get_user_by_name(self, session, name: str) -> Optional[User]:
-        logger.log("Getting user by name.")
+        log("Getting user by name.", "dev-info")
         stmt = select(User).where(User.name == name)
-        logger.log("User found")
+        log("User found", "dev-info")
         return session.scalar(stmt)
 
     def _process_authentication(self, user) -> None:
+        log("Starting processing authentication.", "dev-info")
         self.user_id = user.id
         self.username = user.name
         self.user_created_at = user.created_at
         self._authenticated = True
-        logger.log(f"Authenticaton processed. {self}", "dev-info")
+        log(f"Authenticaton processed. {self}", "dev-info")
         return
 
     def is_authenticated(self):
         return self._authenticated
 
-    @logger.log_duration
+    @log_duration
     def register(self, name, pw1, pw2) -> Optional[bool]:
-        logger.log("Starting registration.")
+        log("Starting registration.", "dev-info")
         with self.database_service.db_session() as s:
             if not self._password_checks(pw1, pw2):
-                logger.log(
+                log(
                     "Registration failed. Passwords don't match requirements.",
                     "error",
                 )
@@ -87,16 +88,17 @@ class AuthService:
             s.add(user)
             try:
                 s.flush()
+                log(f"User {name} successfully registered.", "dev-info")
             except IntegrityError as e:
                 s.rollback()
-                logger.log(f"Registration failed. {e}", "error")
+                log(f"Registration failed. {e}", "error")
                 raise ValueError("Name ist bereits registriert.") from e
             self._process_authentication(user)
             return True
 
-    @logger.log_duration
+    @log_duration
     def login(self, name, password) -> bool:
-        logger.log("Starting login.")
+        log("Starting login.", "dev-info")
         with self.database_service.db_session() as s:
             user = self._get_user_by_name(s, name)
             if (
@@ -104,10 +106,10 @@ class AuthService:
                 and self._verify_password(password, user.password_hash)
                 and user.is_active
             ):
-                logger.log("Login successful")
+                log("Login successful", "dev-info")
                 self._process_authentication(user)
                 return True
-            logger.log("Login failed.", "warning")
+            log("Login failed.", "warning")
             return False
 
     def __repr__(self):
