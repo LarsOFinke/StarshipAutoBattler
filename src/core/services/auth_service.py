@@ -75,30 +75,28 @@ class AuthService:
 
     @log_duration
     def register(self, name, pw1, pw2) -> Optional[bool]:
-        log("Starting registration.", "dev-info")
+        log("Starting registration.")
         with self.database_service.db_session() as s:
             if not self._password_checks(pw1, pw2):
-                log(
-                    "Registration failed. Passwords don't match requirements.",
-                    "error",
-                )
+                log("Registration failed. Passwords don't match requirements.")
                 raise ValueError("Passwörter erfüllen nicht die Voraussetzungen.")
 
             user = User(name=name, password_hash=self._hash_password(pw1))
             s.add(user)
             try:
                 s.flush()
-                log(f"User {name} successfully registered.", "dev-info")
+                log("User successfully registered.")
             except IntegrityError as e:
                 s.rollback()
                 log(f"Registration failed. {e}", "error")
                 raise ValueError("Name ist bereits registriert.") from e
             self._process_authentication(user)
+            log("User successfully authenticated.")
             return True
 
     @log_duration
     def login(self, name, password) -> bool:
-        log("Starting login.", "dev-info")
+        log("Starting login.")
         with self.database_service.db_session() as s:
             user = self._get_user_by_name(s, name)
             if (
@@ -106,10 +104,10 @@ class AuthService:
                 and self._verify_password(password, user.password_hash)
                 and user.is_active
             ):
-                log("Login successful", "dev-info")
                 self._process_authentication(user)
+                log("Login successful")
                 return True
-            log("Login failed.", "warning")
+            log("Login failed.")
             return False
 
     def __repr__(self):

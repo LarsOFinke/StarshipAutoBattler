@@ -24,18 +24,18 @@ class ConfigService:
         section = "ui"
         key, value = "theme", "dark"
         """
-        log("Attempting to change config-key.", "dev-info")
+        log("Attempting to change config-key.")
         if not self.cfg.has_section(section):
-            log(f"Section ({section}) not found.", "dev-info")
+            log(f"Section ({section}) not found.")
             self.cfg.add_section(section)
-            log(f"Section ({section}) added.", "dev-info")
+            log(f"Section ({section}) added.")
         self.cfg.set(section, key, value)
-        log(f"Key ({key}) with Value ({value}) set.", "dev-info")
+        log(f"Key ({key}) with Value ({value}) set.")
 
         with open(self.path, "w") as f:
-            log("Attempting to overwrite config.", "dev-info")
+            log("Attempting to overwrite config.")
             self.cfg.write(f)
-            log("Config successfully overwritten.", "dev-info")
+            log("Config successfully overwritten.")
 
     def __repr__(self):
         return f"Path: {self.path} | Config: {self.cfg}"

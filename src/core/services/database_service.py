@@ -21,26 +21,26 @@ class DatabaseService:
     @contextmanager
     def db_session(self):
         with self.session.begin() as session:
-            log("Starting DB-session.", "dev-info")
+            log("Starting DB-session.")
             try:
                 yield session
                 session.commit()
-                log("DB-session successfully committed.", "dev-info")
+                log("DB-session successfully committed.")
             except:
                 session.rollback()
                 log("DB-session rolled back.", "error")
                 raise
             finally:
                 session.close()
-                log("DB-sessions closed.", "dev-info")
+                log("DB-sessions closed.")
 
     @log_duration
     def init_db(self):
-        log("Initiatlizing the Database.", "dev-info")
+        log("Initiatlizing the Database.")
         from ..models import user
 
         Base.metadata.create_all(self.engine)
-        log("Database initialized.", "dev-info")
+        log("Database initialized.")
 
     def __repr__(self):
         return f"Engine: {self.engine} | Session: {self.session}"
