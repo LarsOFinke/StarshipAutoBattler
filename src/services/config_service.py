@@ -17,11 +17,11 @@ class ConfigService(Service):
 
     @log_duration
     def _setup_config(self):
-        log("Setting up config for the Config-Service.")
+        log("Setting up config for the Config-Service.", "dev-info")
         cfg = ConfigParser()
         cfg.optionxform = str  # keep key case as-is
         cfg.read(self.path)
-        log("Config for the Config-Service is set up.")
+        log("Config for the Config-Service is set up.", "dev-info")
         return cfg
 
     # -- Public API -- #

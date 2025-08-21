@@ -150,13 +150,16 @@ class ConfigClient(Client):
     def _toggle_dev_mode(self, activate: bool) -> None:
         value: str = "1" if activate else "0"
         self.cfg_service.change_key("Logging", "DEV_MODE", value)
+        self._stop_selecting()
 
     def _set_log_level(self, level: str) -> None:
         self.cfg_service.change_key("Logging", "LOG_LEVEL", level)
+        self._stop_selecting()
 
     def _set_output(self, output_type: str, activate: bool) -> None:
         value: str = "1" if activate else "0"
         self.cfg_service.change_key("Logging", f"LOG_{output_type.upper()}", value)
+        self._stop_selecting()
 
     def _set_file_name(self) -> None:
         self._print_header("File-Name")
@@ -164,6 +167,7 @@ class ConfigClient(Client):
         if name == "0":
             return
         self.cfg_service.change_key("Logging", "LOG_FILE_NAME", name)
+        self._stop_selecting()
 
     def _set_file_type(self) -> None:
         self._print_header("File-Type")
@@ -173,6 +177,7 @@ class ConfigClient(Client):
             return
         file_type: str = self.file_types[choice]
         self.cfg_service.change_key("Logging", "LOG_FILE_TYPE", file_type.upper())
+        self._stop_selecting()
 
     # -- Public API -- #
 
