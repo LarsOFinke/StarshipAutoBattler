@@ -74,7 +74,7 @@ class AuthService:
         return self._authenticated
 
     @log_duration
-    def register(self, name, pw1, pw2) -> Optional[bool]:
+    def register(self, name, pw1, pw2) -> bool:
         log("Starting registration.")
         with self.database_service.db_session() as s:
             if not self._password_checks(pw1, pw2):
@@ -89,7 +89,7 @@ class AuthService:
             except IntegrityError as e:
                 s.rollback()
                 log(f"Registration failed. {e}", "error")
-                raise ValueError("Name ist bereits registriert.") from e
+                return False
             self._process_authentication(user)
             log("User successfully authenticated.")
             return True

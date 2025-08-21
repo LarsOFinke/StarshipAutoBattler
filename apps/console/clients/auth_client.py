@@ -11,12 +11,6 @@ class AuthClient:
         self._username: str = ""
         self._user_created_at: str = ""
 
-    def _clear_console(self):
-        clear_console()
-
-    def _get_user_choice(self) -> str:
-        return get_user_choice()
-
     def _process_authentication(self) -> None:
         self._user_id = self.auth_service.user_id
         self._username = self.auth_service.username
@@ -38,30 +32,15 @@ class AuthClient:
     def get_user_created_at(self):
         return self._user_created_at
 
-    def login(self) -> None:
-        self._clear_console()
-        print("Please enter the username:")
-        username: str = self._get_user_choice()
-        print("Please enter the password:")
-        password: str = self._get_user_choice()
-        user = self.auth_service.login(username, password)
-        if not user:
+    def login(self, username: str, password: str) -> None:
+        if not self.auth_service.login(username, password):
             input("Login failed.\nPress Enter")
             return
         self._process_authentication()
         return
 
-    def register(self) -> None:
-        self._clear_console()
-
-        print("Please enter the username:")
-        username: str = self._get_user_choice()
-        print("Please enter the password:")
-        pw1: str = self._get_user_choice()
-        print("Please confirm the password:")
-        pw2: str = self._get_user_choice()
-        user = self.auth_service.register(username, pw1, pw2)
-        if not user:
+    def register(self, username: str, pw1: str, pw2: str) -> None:
+        if not self.auth_service.register(username, pw1, pw2):
             input("Registration failed.\nPress Enter")
             return
         self._process_authentication()

@@ -33,6 +33,9 @@ class Menu(ABC):
     def _clear_console(self) -> None:
         clear_console()
 
+    def _stop_selecting(self):
+        self.selecting = False
+
     def _calculate_separator_lengths(self, name: str):
         name_length: int = len(name)
         side_length: int = (
@@ -61,8 +64,8 @@ class Menu(ABC):
         left_separator, right_separator = self._get_side_separators(name)
         print(f"{left_separator} {name} {right_separator}")
 
-    def _get_user_choice(self) -> str:
-        return get_user_choice()
+    def _get_user_choice(self, message: str = "") -> str:
+        return get_user_choice(message)
 
     def _match_choice(self, choice: str, action_list: list[Action]) -> None:
         for action in action_list:

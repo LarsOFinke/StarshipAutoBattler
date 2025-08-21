@@ -44,30 +44,32 @@ class MainMenu(Menu):
         input()
 
     def _settings(self):
-        self._clear_console()
-        self._print_separator()
-        self._print_menu_name("Settings")
-        self._print_separator()
-        action_list = [
-            {
-                "hotkey": "1",
-                "name": "Activate Dev-Mode",
-                "action": partial(self.cfg_client.toggle_dev_mode, activate=True),
-            },
-            {
-                "hotkey": "2",
-                "name": "Deactivate Dev-Mode",
-                "action": partial(self.cfg_client.toggle_dev_mode, activate=False),
-            },
-            {
-                "hotkey": "0",
-                "name": "Back",
-                "action": lambda: None,
-            },
-        ]
-        self._print_actions(action_list)
-        choice = self._get_user_choice()
-        self._match_choice(choice, action_list)
+        self.selecting: bool = True
+        while self.selecting:
+            self._clear_console()
+            self._print_separator()
+            self._print_menu_name("Settings")
+            self._print_separator()
+            action_list = [
+                {
+                    "hotkey": "1",
+                    "name": "Activate Dev-Mode",
+                    "action": partial(self.cfg_client.toggle_dev_mode, activate=True),
+                },
+                {
+                    "hotkey": "2",
+                    "name": "Deactivate Dev-Mode",
+                    "action": partial(self.cfg_client.toggle_dev_mode, activate=False),
+                },
+                {
+                    "hotkey": "0",
+                    "name": "Back",
+                    "action": self._stop_selecting,
+                },
+            ]
+            self._print_actions(action_list)
+            choice = self._get_user_choice()
+            self._match_choice(choice, action_list)
 
     def _logout(self):
         self.running = False

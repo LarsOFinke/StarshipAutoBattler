@@ -12,5 +12,5 @@ def clear_console() -> None:
         print("\n" * 50)
 
 
-def get_user_choice() -> str:
-    return input("")
+def get_user_choice(message: str) -> str:
+    return input(f"{message}\n")

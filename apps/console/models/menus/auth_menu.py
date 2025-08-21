@@ -16,12 +16,19 @@ class AuthMenu(Menu):
         ]
 
     def _login(self):
-        self.auth_client.login()
+        self._clear_console()
+        username: str = self._get_user_choice("Please enter the username:")
+        password: str = self._get_user_choice("Please enter the password:")
+        self.auth_client.login(username, password)
         if self.auth_client.is_authenticated():
             self.running = False
 
     def _register(self):
-        self.auth_client.register()
+        self._clear_console()
+        username: str = self._get_user_choice("Please enter the username:")
+        pw1: str = self._get_user_choice("Please enter the password:")
+        pw2: str = self._get_user_choice("Please confirm the password:")
+        self.auth_client.register(username, pw1, pw2)
         if self.auth_client.is_authenticated():
             self.running = False
 
