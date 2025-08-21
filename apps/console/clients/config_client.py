@@ -45,7 +45,7 @@ class ConfigClient:
                 "action": lambda: None,
             },
         ]
-        self.output_actions: list[dict[str:callable]] = [
+        self.console_log_actions: list[dict[str:callable]] = [
             {
                 "hotkey": "1",
                 "name": "Enable console-logging",
@@ -61,12 +61,19 @@ class ConfigClient:
                 ),
             },
             {
-                "hotkey": "3",
+                "hotkey": "0",
+                "name": "Cancel",
+                "action": lambda: None,
+            },
+        ]
+        self.file_log_actions: list[dict[str:callable]] = [
+            {
+                "hotkey": "1",
                 "name": "Enable file-logging",
                 "action": partial(self._set_output, output_type="file", activate=True),
             },
             {
-                "hotkey": "4",
+                "hotkey": "2",
                 "name": "Disable file-logging",
                 "action": partial(self._set_output, output_type="file", activate=False),
             },

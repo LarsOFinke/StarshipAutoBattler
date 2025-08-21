@@ -24,8 +24,9 @@ class MainMenu(Menu):
         self.config_setting_actions: list[dict[str:callable]] = [
             {"hotkey": "1", "name": "Dev-Mode", "action": self._change_dev_mode},
             {"hotkey": "2", "name": "Log-Level", "action": self._change_log_level},
-            {"hotkey": "3", "name": "Outputs", "action": self._change_outputs},
-            {"hotkey": "0", "name": "Back", "action": lambda: None},
+            {"hotkey": "3", "name": "Console-Log", "action": self._change_console_log},
+            {"hotkey": "4", "name": "File-Log", "action": self._change_file_log},
+            {"hotkey": "0", "name": "Back", "action": self._stop_selecting_settings},
         ]
 
     # -- HELPERS -- #
@@ -37,31 +38,42 @@ class MainMenu(Menu):
             f"Created at: {self.auth_client.get_user_created_at()}"
         )
 
+    def _stop_selecting_settings(self) -> None:
+        self.selecting_settings = False
+
     # -- Config-Settings -- #
 
+    def _config_settings(self):
+        self.selecting_settings: bool = True
+        while self.selecting_settings:
+            self._print_menu_name("Settings - Config")
+            self._print_actions(self.config_setting_actions)
+            choice = self._get_user_choice()
+            self._match_choice(choice, self.config_setting_actions)
+
     def _change_dev_mode(self):
-        self._print_menu_name("Dev-Mode settings")
+        self._print_menu_name("Settings - Config: Dev-Mode")
         self._print_actions(self.cfg_client.dev_mode_actions)
         choice: str = self._get_user_choice()
         self._match_choice(choice, self.cfg_client.dev_mode_actions)
 
     def _change_log_level(self):
-        self._print_menu_name("Log-Level settings")
+        self._print_menu_name("Settings - Config: Log-Level")
         self._print_actions(self.cfg_client.log_level_actions)
         choice: str = self._get_user_choice()
         self._match_choice(choice, self.cfg_client.log_level_actions)
 
-    def _change_outputs(self):
-        self._print_menu_name("Output settings")
-        self._print_actions(self.cfg_client.output_actions)
+    def _change_console_log(self):
+        self._print_menu_name("Settings - Config: Console-Log")
+        self._print_actions(self.cfg_client.console_log_actions)
         choice: str = self._get_user_choice()
-        self._match_choice(choice, self.cfg_client.output_actions)
+        self._match_choice(choice, self.cfg_client.console_log_actions)
 
-    def _config_settings(self):
-        self._print_menu_name("Settings")
-        self._print_actions(self.config_setting_actions)
-        choice = self._get_user_choice()
-        self._match_choice(choice, self.config_setting_actions)
+    def _change_file_log(self):
+        self._print_menu_name("Settings - Config: File-Log")
+        self._print_actions(self.cfg_client.file_log_actions)
+        choice: str = self._get_user_choice()
+        self._match_choice(choice, self.cfg_client.file_log_actions)
 
     # -- ACTIONS -- #
 
@@ -72,7 +84,7 @@ class MainMenu(Menu):
     def _profile(self):
         self._print_menu_name("Profile")
         self._print_user_info()
-        input()
+        self._get_user_choice()
 
     def _settings(self):
         self.selecting: bool = True

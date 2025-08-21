@@ -16,7 +16,7 @@ class AuthMenu(Menu):
         ]
 
     def _login(self):
-        self._clear_console()
+        self._print_menu_name("Login")
         username: str = self._get_user_choice("Please enter the username:")
         password: str = self._get_user_choice("Please enter the password:")
         self.auth_client.login(username, password)
@@ -24,7 +24,7 @@ class AuthMenu(Menu):
             self.running = False
 
     def _register(self):
-        self._clear_console()
+        self._print_menu_name("Registration")
         username: str = self._get_user_choice("Please enter the username:")
         pw1: str = self._get_user_choice("Please enter the password:")
         pw2: str = self._get_user_choice("Please confirm the password:")
