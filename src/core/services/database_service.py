@@ -37,8 +37,21 @@ class DatabaseService:
     @log_duration
     def init_db(self):
         log("Initiatlizing the Database.")
-        from ..models import user
+        try:
+            import src.core.models
 
+            log("Core ORM-Models successfully imported.")
+        except:
+            log("Failed to import core ORM-Models.", "error")
+
+        try:
+            import src.game.models
+
+            log("Core ORM-Models successfully imported.")
+        except:
+            log("Failed to import core ORM-Models.", "error")
+
+        log("Game ORM-Models successfully imported.")
         Base.metadata.create_all(self.engine)
         log("Database initialized.")
 
