@@ -1,19 +1,20 @@
 from functools import partial
 
 from src.services.config_service import ConfigService
+from .client import Client
 
-from ..utils.console_helpers import get_user_choice
 
-
-class ConfigClient:
+class ConfigClient(Client):
     def __init__(self):
+        super().__init__()
+        self.title: str = "Config-Client"
         self.cfg_service = ConfigService()
-        self.config_setting_actions: list[dict[str:callable]] = [
+        self.action_list: list[dict[str:callable]] = [
             {"hotkey": "1", "name": "Dev-Mode", "action": self._change_dev_mode},
             {"hotkey": "2", "name": "Log-Level", "action": self._change_log_level},
             {"hotkey": "3", "name": "Console-Log", "action": self._change_console_log},
             {"hotkey": "4", "name": "File-Log", "action": self._change_file_log},
-            {"hotkey": "0", "name": "Back", "action": self._stop_selecting_settings},
+            {"hotkey": "0", "name": "Back", "action": self._stop},
         ]
         self.dev_mode_actions: list[dict[str:callable]] = [
             {
@@ -109,6 +110,32 @@ class ConfigClient:
     def _list_file_types(self):
         print("")
 
+    # -- Config-Settings -- #
+
+    def _change_dev_mode(self):
+        self._print_header("Settings - Config: Dev-Mode")
+        self._print_actions(self.dev_mode_actions)
+        choice: str = self._get_user_choice()
+        self._match_choice(choice, self.dev_mode_actions)
+
+    def _change_log_level(self):
+        self._print_header("Settings - Config: Log-Level")
+        self._print_actions(self.log_level_actions)
+        choice: str = self._get_user_choice()
+        self._match_choice(choice, self.log_level_actions)
+
+    def _change_console_log(self):
+        self._print_header("Settings - Config: Console-Log")
+        self._print_actions(self.console_log_actions)
+        choice: str = self._get_user_choice()
+        self._match_choice(choice, self.console_log_actions)
+
+    def _change_file_log(self):
+        self._print_header("Settings - Config: File-Log")
+        self._print_actions(self.file_log_actions)
+        choice: str = self._get_user_choice()
+        self._match_choice(choice, self.file_log_actions)
+
     # -- Actions -- #
 
     def _toggle_dev_mode(self, activate: bool) -> None:
@@ -123,14 +150,14 @@ class ConfigClient:
         self.cfg_service.change_key("Logging", f"LOG_{output_type.upper()}", value)
 
     def _set_file_name(self) -> None:
-        name: str = get_user_choice("New name:\n'0' to cancel")
+        name: str = self.get_user_choice("New name:\n'0' to cancel")
         if name == "0":
             return
         self.cfg_service.change_key("Logging", "LOG_FILE_NAME", name)
 
     def _set_file_type(self) -> None:
-        file_type: str = get_user_choice("New name:")
+        file_type: str = self.get_user_choice("New name:")
         self.cfg_service.change_key("Logging", "LOG_FILE_TYPE", file_type)
 
     def __repr__(self):
-        return f"Config-Service - {self.cfg_service}"
+        return super().__repr__() + f"- Config-Service: {self.cfg_service}"
