@@ -1,6 +1,6 @@
 from ...clients.auth_client import auth_client
 
-from .menu import Menu
+from .menu import Menu, Action
 
 
 class AuthMenu(Menu):
@@ -8,7 +8,7 @@ class AuthMenu(Menu):
         super().__init__()
         self.title: str = "Auth-Menu"
         self.auth_client = auth_client
-        self.action_list: list[dict[str:callable]] = [
+        self.action_list: list[Action] = [
             {"hotkey": "1", "name": "login", "action": self._login},
             {"hotkey": "2", "name": "register", "action": self._register},
             {"hotkey": "0", "name": "exit", "action": self._stop},

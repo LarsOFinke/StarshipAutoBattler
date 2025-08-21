@@ -1,6 +1,6 @@
 from ...clients.auth_client import auth_client
 from ...clients.config_client import ConfigClient
-from .menu import Menu
+from .menu import Menu, Action
 from .game_menu import GameMenu
 
 
@@ -10,13 +10,13 @@ class MainMenu(Menu):
         self.title = "Main-Menu"
         self.auth_client = auth_client
         self.cfg_client = ConfigClient()
-        self.action_list: list[dict[str:callable]] = [
-            {"hotkey": "1", "name": "play", "action": self._play},
+        self.action_list: list[Action] = [
+            {"hotkey": "1", "name": "game", "action": self._game},
             {"hotkey": "7", "name": "profile", "action": self._profile},
             {"hotkey": "8", "name": "settings", "action": self._settings},
             {"hotkey": "0", "name": "logout", "action": self._stop},
         ]
-        self.setting_actions: list[dict[str:callable]] = [
+        self.setting_actions: list[Action] = [
             {
                 "hotkey": "1",
                 "name": "Config settings",
@@ -39,7 +39,7 @@ class MainMenu(Menu):
 
     # -- Actions -- #
 
-    def _play(self):
+    def _game(self):
         game_menu = GameMenu()
         game_menu.run()
 

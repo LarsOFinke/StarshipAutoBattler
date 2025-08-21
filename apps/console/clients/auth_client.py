@@ -5,6 +5,8 @@ from .client import Client
 
 class AuthClient(Client):
     def __init__(self):
+        super().__init__()
+        self.title: str = "Auth-Client"
         self.auth_service = AuthService()
         self._authenticated: bool = False
         self._user_id: int = 0
