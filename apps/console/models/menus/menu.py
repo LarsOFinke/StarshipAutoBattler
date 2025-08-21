@@ -55,14 +55,12 @@ class Menu(ABC):
     def _print_separator(self) -> None:
         print("=" * PRINT_SEPARATOR_LENGTH)
 
-    def _print_header(self) -> None:
-        self._print_separator()
-        self._print_menu_name(self.title)
-        self._print_separator()
-
     def _print_menu_name(self, name: str) -> None:
         left_separator, right_separator = self._get_side_separators(name)
+        self._clear_console()
+        self._print_separator()
         print(f"{left_separator} {name} {right_separator}")
+        self._print_separator()
 
     def _get_user_choice(self, message: str = "") -> str:
         return get_user_choice(message)
@@ -87,8 +85,7 @@ class Menu(ABC):
         """
         self.running = True
         while self.running:
-            self._clear_console()
-            self._print_header()
+            self._print_menu_name(self.title)
             self._print_actions(self.action_list)
             choice = self._get_user_choice().strip()
             self._match_choice(choice, self.action_list)

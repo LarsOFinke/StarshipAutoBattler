@@ -1,5 +1,3 @@
-from functools import partial
-
 from ...clients.auth_client import auth_client
 from ...clients.config_client import ConfigClient
 from .menu import Menu
@@ -19,6 +17,23 @@ class MainMenu(Menu):
             {"hotkey": "8", "name": "settings", "action": self._settings},
             {"hotkey": "0", "name": "logout", "action": self._logout},
         ]
+        self.config_setting_actions: list[dict[str:callable]] = [
+            {
+                "hotkey": "1",
+                "name": "Change Dev-Mode",
+                "action": self._change_dev_mode,
+            },
+            {
+                "hotkey": "2",
+                "name": "Change Log-Level",
+                "action": self._change_log_level,
+            },
+            {
+                "hotkey": "0",
+                "name": "Back",
+                "action": self._stop_selecting,
+            },
+        ]
 
     # -- HELPERS -- #
 
@@ -29,6 +44,17 @@ class MainMenu(Menu):
             f"Created at: {self.auth_client.get_user_created_at()}"
         )
 
+    # -- Config-Settings -- #
+
+    def _change_dev_mode(self):
+        self._clear_console()
+        self._print_actions(self.cfg_client.dev_mode_actions)
+        choice: str = self._get_user_choice()
+        self._match_choice(choice, self.cfg_client.dev_mode_actions)
+
+    def _change_log_level(self):
+        pass
+
     # -- ACTIONS -- #
 
     def _play(self):
@@ -36,40 +62,17 @@ class MainMenu(Menu):
         game_menu.run()
 
     def _profile(self):
-        self._clear_console()
-        self._print_separator()
         self._print_menu_name("Profile")
-        self._print_separator()
         self._print_user_info()
         input()
 
     def _settings(self):
         self.selecting: bool = True
         while self.selecting:
-            self._clear_console()
-            self._print_separator()
             self._print_menu_name("Settings")
-            self._print_separator()
-            action_list = [
-                {
-                    "hotkey": "1",
-                    "name": "Activate Dev-Mode",
-                    "action": partial(self.cfg_client.toggle_dev_mode, activate=True),
-                },
-                {
-                    "hotkey": "2",
-                    "name": "Deactivate Dev-Mode",
-                    "action": partial(self.cfg_client.toggle_dev_mode, activate=False),
-                },
-                {
-                    "hotkey": "0",
-                    "name": "Back",
-                    "action": self._stop_selecting,
-                },
-            ]
-            self._print_actions(action_list)
+            self._print_actions(self.config_setting_actions)
             choice = self._get_user_choice()
-            self._match_choice(choice, action_list)
+            self._match_choice(choice, self.config_setting_actions)
 
     def _logout(self):
         self.running = False
