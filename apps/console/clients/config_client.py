@@ -9,6 +9,7 @@ class ConfigClient(Client):
         super().__init__()
         self.title: str = "Config-Client"
         self.cfg_service = ConfigService()
+        # - Logging actions - #
         self.action_list: list[Action] = [
             {"hotkey": "1", "name": "Dev-Mode", "action": self._change_dev_mode},
             {"hotkey": "2", "name": "Log-Level", "action": self._change_log_level},
@@ -94,8 +95,18 @@ class ConfigClient(Client):
             },
             {
                 "hotkey": "4",
-                "name": "Change file-type",
-                "action": self._set_file_type,
+                "name": "Change file-type to 'text'",
+                "action": partial(self._set_file_type, file_type="text"),
+            },
+            {
+                "hotkey": "5",
+                "name": "Change file-type to 'json'",
+                "action": partial(self._set_file_type, file_type="json"),
+            },
+            {
+                "hotkey": "6",
+                "name": "Change file-type to 'csv'",
+                "action": partial(self._set_file_type, file_type="csv"),
             },
             {
                 "hotkey": "0",
@@ -145,7 +156,7 @@ class ConfigClient(Client):
             choice: str = self._get_user_choice()
             self._match_choice(choice, self.file_log_actions)
 
-    # -- Config-Settings -- #
+    # -- Logging-Settings -- #
 
     def _toggle_dev_mode(self, activate: bool) -> None:
         value: str = "1" if activate else "0"
@@ -169,13 +180,7 @@ class ConfigClient(Client):
         self.cfg_service.change_key("Logging", "LOG_FILE_NAME", name)
         self._stop_selecting()
 
-    def _set_file_type(self) -> None:
-        self._print_header("File-Type")
-        self._list_file_types()
-        choice: int = int(self._get_user_choice("New type: ('0' to cancel)"))
-        if not choice:
-            return
-        file_type: str = self.file_types[choice]
+    def _set_file_type(self, file_type: str) -> None:
         self.cfg_service.change_key("Logging", "LOG_FILE_TYPE", file_type.upper())
         self._stop_selecting()
 
