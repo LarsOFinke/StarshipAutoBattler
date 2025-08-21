@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "StarshipAutoBattler"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+  "typer>=0.12",                                                          # CLI
+  "python-dotenv>=1.0",                                                   # Pythons .env-Module
+  "sqlalchemy>=2.0",                                                      # SQL ORM
+  "lars-logger @ git+https://github.com/LarsOFinke/lars-logger.git@main", # Mein Logger
+]
+
+[project.scripts]
+sab-console = "apps.console.main:main"
+
+[tool.setuptools]
+package-dir = { "" = "." }
+
+[tool.setuptools.packages.find]
+include = ["apps*", "src*"] # nimmt nur Pakete mit __init__.py auf
