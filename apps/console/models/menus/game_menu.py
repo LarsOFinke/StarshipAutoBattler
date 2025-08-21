@@ -27,3 +27,6 @@ class GameMenu(Menu):
 
     def _return_to_main_menu(self):
         self.running = False
+
+    def __repr__(self):
+        return super().__repr__() + f" | Game-Client - {self.game_client}"

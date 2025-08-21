@@ -1,3 +1,5 @@
+from functools import partial
+
 from ...clients.auth_client import auth_client
 from ...clients.config_client import ConfigClient
 from .menu import Menu
@@ -13,7 +15,6 @@ class MainMenu(Menu):
         self.cfg_client = ConfigClient()
         self.action_list: list[dict[str:callable]] = [
             {"hotkey": "1", "name": "play", "action": self._play},
-            {"hotkey": "2", "name": "test", "action": self._test},
             {"hotkey": "7", "name": "profile", "action": self._profile},
             {"hotkey": "8", "name": "settings", "action": self._settings},
             {"hotkey": "0", "name": "logout", "action": self._logout},
@@ -34,24 +35,45 @@ class MainMenu(Menu):
         game_menu = GameMenu()
         game_menu.run()
 
-    def _test(self):
-        print(self.auth_client)
-        input()
-
     def _profile(self):
         self._clear_console()
         self._print_separator()
-        print("Profile")
+        self._print_menu_name("Profile")
         self._print_separator()
         self._print_user_info()
         input()
 
     def _settings(self):
-        self.cfg_client.toggle_dev_mode()
-        input()
+        self._clear_console()
+        self._print_separator()
+        self._print_menu_name("Settings")
+        self._print_separator()
+        action_list = [
+            {
+                "hotkey": "1",
+                "name": "Activate Dev-Mode",
+                "action": partial(self.cfg_client.toggle_dev_mode, activate=True),
+            },
+            {
+                "hotkey": "2",
+                "name": "Deactivate Dev-Mode",
+                "action": partial(self.cfg_client.toggle_dev_mode, activate=False),
+            },
+            {
+                "hotkey": "0",
+                "name": "Back",
+                "action": lambda: None,
+            },
+        ]
+        self._print_actions(action_list)
+        choice = self._get_user_choice()
+        self._match_choice(choice, action_list)
 
     def _logout(self):
         self.running = False
 
     def __repr__(self):
-        return super().__repr__()
+        return (
+            super().__repr__()
+            + f" | Auth-Client: {self.auth_client} | Config-Client: {self.cfg_client}"
+        )

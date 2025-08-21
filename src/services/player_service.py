@@ -13,6 +13,9 @@ class PlayerService:
         self.player: PlayerCharacter | None = None
         self.database_service = database_service
 
+    def _get_player_character_by_name(self, name: str) -> PlayerCharacter | None:
+        return self.player
+
     # -- Public API -- #
 
     @log_duration
@@ -20,13 +23,9 @@ class PlayerService:
         pass
 
     @log_duration
-    def get_player_character(self) -> PlayerCharacter | None:
-        return self.player
-
-    @log_duration
-    def list_player_characters(self) -> list:
-        player_character_list: list[PlayerCharacter] = []
-        return player_character_list
+    def select_player_character(self, name: str) -> None:
+        player_character = self._get_player_character_by_name(name)
+        return
 
     def __repr__(self):
         return f"Player: {self.player} | Database-Service: {self.database_service}"

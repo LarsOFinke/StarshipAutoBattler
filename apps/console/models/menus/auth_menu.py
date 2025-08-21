@@ -30,4 +30,4 @@ class AuthMenu(Menu):
         return
 
     def __repr__(self):
-        return super().__repr__() + f" | Auth-Service: {self.auth_client}"
+        return super().__repr__() + f" | Auth-Client: {self.auth_client}"
