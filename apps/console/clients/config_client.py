@@ -45,12 +45,48 @@ class ConfigClient:
                 "action": lambda: None,
             },
         ]
+        self.output_actions: list[dict[str:callable]] = [
+            {
+                "hotkey": "1",
+                "name": "Enable console-logging",
+                "action": partial(
+                    self._set_output, output_type="console", activate=True
+                ),
+            },
+            {
+                "hotkey": "2",
+                "name": "Disable console-logging",
+                "action": partial(
+                    self._set_output, output_type="console", activate=False
+                ),
+            },
+            {
+                "hotkey": "3",
+                "name": "Enable file-logging",
+                "action": partial(self._set_output, output_type="file", activate=True),
+            },
+            {
+                "hotkey": "4",
+                "name": "Disable file-logging",
+                "action": partial(self._set_output, output_type="file", activate=False),
+            },
+            {
+                "hotkey": "0",
+                "name": "Cancel",
+                "action": lambda: None,
+            },
+        ]
 
-    def _toggle_dev_mode(self, activate: bool) -> bool:
-        self.cfg_service.change_key("Logging", "DEV_MODE", "1" if activate else "0")
+    def _toggle_dev_mode(self, activate: bool) -> None:
+        value: str = "1" if activate else "0"
+        self.cfg_service.change_key("Logging", "DEV_MODE", value)
 
-    def _set_log_level(self, level: str):
+    def _set_log_level(self, level: str) -> None:
         self.cfg_service.change_key("Logging", "LOG_LEVEL", level)
+
+    def _set_output(self, output_type: str, activate: bool) -> None:
+        value: str = "1" if activate else "0"
+        self.cfg_service.change_key("Logging", f"LOG_{output_type.upper()}", value)
 
     def __repr__(self):
         return f"Config-Service - {self.cfg_service}"

@@ -24,6 +24,7 @@ class MainMenu(Menu):
         self.config_setting_actions: list[dict[str:callable]] = [
             {"hotkey": "1", "name": "Dev-Mode", "action": self._change_dev_mode},
             {"hotkey": "2", "name": "Log-Level", "action": self._change_log_level},
+            {"hotkey": "3", "name": "Outputs", "action": self._change_outputs},
             {"hotkey": "0", "name": "Back", "action": lambda: None},
         ]
 
@@ -49,6 +50,12 @@ class MainMenu(Menu):
         self._print_actions(self.cfg_client.log_level_actions)
         choice: str = self._get_user_choice()
         self._match_choice(choice, self.cfg_client.log_level_actions)
+
+    def _change_outputs(self):
+        self._print_menu_name("Output settings")
+        self._print_actions(self.cfg_client.output_actions)
+        choice: str = self._get_user_choice()
+        self._match_choice(choice, self.cfg_client.output_actions)
 
     def _config_settings(self):
         self._print_menu_name("Settings")
