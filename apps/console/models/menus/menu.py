@@ -73,4 +73,4 @@ class Menu(ABC):
         actions_string = " - ".join(
             f'{a["hotkey"]} {a["name"]}' for a in self.action_list
         )
-        return f"Running: {self.running} | " f"Action-List: {actions_string}"
+        return f"{self.title} - Running: {self.running} | " f"Action-List: {actions_string}"
