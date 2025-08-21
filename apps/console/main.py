@@ -1,6 +1,6 @@
-from .core.utils.console_helpers import clear_console
-from .core.models.menus.auth_menu import AuthMenu
-from .core.models.menus.main_menu import MainMenu
+from .utils.console_helpers import clear_console
+from .models.menus.auth_menu import AuthMenu
+from .models.menus.main_menu import MainMenu
 
 
 def run_authentication() -> bool:

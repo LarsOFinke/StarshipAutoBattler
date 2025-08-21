@@ -1,4 +1,4 @@
-from src.core.services.auth_service import AuthService as AuthSrvc
+from src.services.auth_service import AuthService as AuthSrvc
 
 from ..utils.console_helpers import clear_console, get_user_choice
 

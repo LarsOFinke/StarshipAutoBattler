@@ -1,4 +1,4 @@
-from ...config import (
+from ..config import (
     DEV_MODE,
     LOG_LEVEL,
     LOG_CONSOLE,

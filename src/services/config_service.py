@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 
-from ...config import CONFIG_PATH
+from ..config import CONFIG_PATH
 from .logger_service import log, log_duration
 
 

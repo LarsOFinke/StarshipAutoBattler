@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from .logger_service import log, log_duration
-from ...config import DATABASE_URL
+from ..config import DATABASE_URL
 from ..models.orm_base import Base
 
 
@@ -38,20 +38,13 @@ class DatabaseService:
     def init_db(self):
         log("Initiatlizing the Database.")
         try:
-            import src.core.models
+            log("Attempting to import ORM-Models.")
+            import src.models
 
-            log("Core ORM-Models successfully imported.")
+            log("ORM-Models successfully imported.")
         except:
-            log("Failed to import core ORM-Models.", "error")
+            log("Failed to import ORM-Models.", "error")
 
-        try:
-            import src.game.models
-
-            log("Core ORM-Models successfully imported.")
-        except:
-            log("Failed to import core ORM-Models.", "error")
-
-        log("Game ORM-Models successfully imported.")
         Base.metadata.create_all(self.engine)
         log("Database initialized.")
 

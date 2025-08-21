@@ -1,4 +1,4 @@
-from src.core.services.config_service import ConfigService
+from src.services.config_service import ConfigService
 
 from ...services.auth_service import auth_service
 from .menu import Menu
