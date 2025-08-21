@@ -47,13 +47,16 @@ class MainMenu(Menu):
     # -- Config-Settings -- #
 
     def _change_dev_mode(self):
-        self._clear_console()
+        self._print_menu_name("Dev-Mode settings")
         self._print_actions(self.cfg_client.dev_mode_actions)
         choice: str = self._get_user_choice()
         self._match_choice(choice, self.cfg_client.dev_mode_actions)
 
     def _change_log_level(self):
-        pass
+        self._print_menu_name("Log-Level settings")
+        self._print_actions(self.cfg_client.log_level_actions)
+        choice: str = self._get_user_choice()
+        self._match_choice(choice, self.cfg_client.log_level_actions)
 
     # -- ACTIONS -- #
 
