@@ -9,18 +9,9 @@ class AuthClient(Client):
         self.title: str = "Auth-Client"
         self.auth_service = AuthService()
         self._authenticated: bool = False
-        self._user_id: int = 0
-        self._username: str = ""
-        self._user_created_at: str = ""
+        self.user = None
 
     # -- Helpers -- #
-
-    def _process_authentication(self) -> None:
-        self._user_id = self.auth_service.user_id
-        self._username = self.auth_service.username
-        self._user_created_at = self.auth_service.user_created_at
-        self._authenticated = self.auth_service.is_authenticated()
-        return
 
     # -- Public API -- #
 
@@ -43,7 +34,8 @@ class AuthClient(Client):
         if not self.auth_service.login(username, password):
             input("Login failed.\nPress Enter")
             return
-        self._process_authentication()
+        self.user = self.auth_service.get_user()
+        self._authenticated = self.auth_service.is_authenticated()
         return
 
     def register(self) -> None:
@@ -54,7 +46,9 @@ class AuthClient(Client):
         if not self.auth_service.register(username, pw1, pw2):
             input("Registration failed.\nPress Enter")
             return
-        self._process_authentication()
+        self.user = self.auth_service.get_user()
+        self._authenticated = self.auth_service.is_authenticated()
+        input(self._authenticated)
         return
 
     def __repr__(self):

@@ -18,6 +18,7 @@ class AuthService(Service):
     def __init__(self):
         self.title: str = "Auth-Service"
         self.database_service = database_service
+        self._user = None
         self._authenticated: bool = False
         self.user_id: int = 0
         self.username: str = ""
@@ -68,9 +69,9 @@ class AuthService(Service):
     @log_duration
     def _get_user_by_name(self, session, name: str) -> Optional[User]:
         log("Getting user by name.", "dev-info")
-        stmt = select(User).where(User.name == name)
+        query = select(User).where(User.name == name)
         log("User found", "dev-info")
-        return session.scalar(stmt)
+        return session.scalar(query)
 
     @log_duration
     def _process_authentication(self, user) -> None:
@@ -89,6 +90,10 @@ class AuthService(Service):
         return self._authenticated
 
     @log_duration
+    def get_user(self):
+        return self._user
+
+    @log_duration
     def register(self, name, pw1, pw2) -> bool:
         log("Starting registration.")
         with self.database_service.db_session() as s:
@@ -100,13 +105,15 @@ class AuthService(Service):
             s.add(user)
             try:
                 s.flush()
+                self._user = user
                 log("User successfully registered.")
             except IntegrityError as e:
                 s.rollback()
                 log(f"Registration failed. {e}", "error")
                 return False
-            self._process_authentication(user)
+            # self._process_authentication(user)
             log("User successfully authenticated.")
+            self._authenticated = True
             return True
 
     @log_duration
@@ -119,7 +126,9 @@ class AuthService(Service):
                 and self._verify_password(password, user.password_hash)
                 and user.is_active
             ):
-                self._process_authentication(user)
+                # self._process_authentication(user)
+                self._user = user
+                self._authenticated = True
                 log("Login successful")
                 return True
             log("Login failed.")
