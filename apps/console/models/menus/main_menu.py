@@ -29,9 +29,9 @@ class MainMenu(Menu):
 
     def _print_user_info(self) -> None:
         print(
-            f"User-ID: {self.auth_client.get_user_id()} \n"
-            f"Username: {self.auth_client.get_username()} \n"
-            f"Created at: {self.auth_client.get_user_created_at()}"
+            f"User-ID: {self.auth_client.user.get("id")} \n"
+            f"Username: {self.auth_client.user.get("name")} \n"
+            f"Created at: {self.auth_client.user.get("created_at")}"
         )
 
     def _stop_selecting_settings(self) -> None:

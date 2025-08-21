@@ -73,16 +73,6 @@ class AuthService(Service):
         log("User found", "dev-info")
         return session.scalar(query)
 
-    @log_duration
-    def _process_authentication(self, user) -> None:
-        log("Starting processing authentication.", "dev-info")
-        self.user_id = user.id
-        self.username = user.name
-        self.user_created_at = user.created_at
-        self._authenticated = True
-        log(f"Authenticaton processed. {self}", "dev-info")
-        return
-
     # -- Public API -- #
 
     @log_duration
@@ -105,7 +95,11 @@ class AuthService(Service):
             s.add(user)
             try:
                 s.flush()
-                self._user = user
+                self._user = {
+                    "id": user.id,
+                    "name": user.name,
+                    "created_at": user.created_at,
+                }
                 log("User successfully registered.")
             except IntegrityError as e:
                 s.rollback()
@@ -127,7 +121,11 @@ class AuthService(Service):
                 and user.is_active
             ):
                 # self._process_authentication(user)
-                self._user = user
+                self._user = {
+                    "id": user.id,
+                    "name": user.name,
+                    "created_at": user.created_at,
+                }
                 self._authenticated = True
                 log("Login successful")
                 return True

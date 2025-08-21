@@ -18,15 +18,6 @@ class AuthClient(Client):
     def is_authenticated(self):
         return self._authenticated
 
-    def get_user_id(self):
-        return self._user_id
-
-    def get_username(self):
-        return self._username
-
-    def get_user_created_at(self):
-        return self._user_created_at
-
     def login(self) -> None:
         self._print_header("Login")
         username: str = self._get_user_choice("Please enter the username:")
