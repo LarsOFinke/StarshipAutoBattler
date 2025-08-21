@@ -10,12 +10,14 @@ from ..models.player_character import PlayerCharacter
 
 
 class PlayerService(Service):
+    @log_duration
     def __init__(self) -> None:
         self.title: str = "Player-Service"
         self.player: PlayerCharacter | None = None
         self.database_service = database_service
         log(f"Player-Service initialised - {self}", "dev-info")
 
+    @log_duration
     def _get_player_character_by_name(self, name: str) -> PlayerCharacter | None:
         return self.player
 

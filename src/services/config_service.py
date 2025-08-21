@@ -8,16 +8,20 @@ from .service import Service
 
 
 class ConfigService(Service):
+    @log_duration
     def __init__(self):
         self.title: str = "Config-Service"
         self.path: str = CONFIG_PATH
         self.cfg = self._setup_config()
         log(f"Config-Service initialised - {self}", "dev-info")
 
+    @log_duration
     def _setup_config(self):
+        log("Setting up config for the Config-Service.")
         cfg = ConfigParser()
         cfg.optionxform = str  # keep key case as-is
         cfg.read(self.path)
+        log("Config for the Config-Service is set up.")
         return cfg
 
     # -- Public API -- #

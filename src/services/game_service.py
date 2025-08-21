@@ -4,6 +4,7 @@ from .service import Service
 
 
 class GameService(Service):
+    @log_duration
     def __init__(self):
         self.title: str = "Game-Service"
         log(f"Game-Service initialised - {self}", "dev-info")

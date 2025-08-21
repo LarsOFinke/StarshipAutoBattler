@@ -12,6 +12,7 @@ from .service import Service
 
 
 class DatabaseService(Service):
+    @log_duration
     def __init__(self):
         self.title: str = "Database-Service"
         self.engine = create_engine(DATABASE_URL, echo=False, future=True)
