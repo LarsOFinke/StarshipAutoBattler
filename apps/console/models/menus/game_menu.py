@@ -1,4 +1,4 @@
-from ...services.game_service import GameService
+from ...clients.game_client import GameClient
 
 from .menu import Menu
 
@@ -8,7 +8,7 @@ class GameMenu(Menu):
         super().__init__()
         self.running = True
         self.title = "Game-Menu"
-        self.game_service = GameService()
+        self.game_client = GameClient()
         self.action_list: list[dict[str:callable]] = [
             {
                 "hotkey": "1",

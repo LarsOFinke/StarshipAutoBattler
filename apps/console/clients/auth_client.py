@@ -1,11 +1,11 @@
-from src.services.auth_service import AuthService as AuthSrvc
+from src.services.auth_service import AuthService
 
 from ..utils.console_helpers import clear_console, get_user_choice
 
 
-class AuthService:
+class AuthClient:
     def __init__(self):
-        self.auth_srvc = AuthSrvc()
+        self.auth_service = AuthService()
         self._authenticated: bool = False
         self._user_id: int = 0
         self._username: str = ""
@@ -18,10 +18,10 @@ class AuthService:
         return get_user_choice()
 
     def _process_authentication(self) -> None:
-        self._user_id = self.auth_srvc.user_id
-        self._username = self.auth_srvc.username
-        self._user_created_at = self.auth_srvc.user_created_at
-        self._authenticated = self.auth_srvc.is_authenticated()
+        self._user_id = self.auth_service.user_id
+        self._username = self.auth_service.username
+        self._user_created_at = self.auth_service.user_created_at
+        self._authenticated = self.auth_service.is_authenticated()
         return
 
     # -- Public API -- #
@@ -44,7 +44,7 @@ class AuthService:
         username: str = self._get_user_choice()
         print("Please enter the password:")
         password: str = self._get_user_choice()
-        user = self.auth_srvc.login(username, password)
+        user = self.auth_service.login(username, password)
         if not user:
             input("Login failed.\nPress Enter")
             return
@@ -60,7 +60,7 @@ class AuthService:
         pw1: str = self._get_user_choice()
         print("Please confirm the password:")
         pw2: str = self._get_user_choice()
-        user = self.auth_srvc.register(username, pw1, pw2)
+        user = self.auth_service.register(username, pw1, pw2)
         if not user:
             input("Registration failed.\nPress Enter")
             return
@@ -71,4 +71,4 @@ class AuthService:
         return f"Authenticated: {self.is_authenticated()} | User-ID: {self._user_id} | Username: {self._username} | User created at: {self._user_created_at}"
 
 
-auth_service = AuthService()
+auth_client = AuthClient()

@@ -6,7 +6,7 @@ from .models.menus.main_menu import MainMenu
 def run_authentication() -> bool:
     auth_menu = AuthMenu()
     auth_menu.run()
-    if auth_menu.auth_service.is_authenticated():
+    if auth_menu.auth_client.is_authenticated():
         return True
     return False
 

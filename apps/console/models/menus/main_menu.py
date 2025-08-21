@@ -1,6 +1,5 @@
-from src.services.config_service import ConfigService
-
-from ...services.auth_service import auth_service
+from ...clients.auth_client import auth_client
+from ...clients.config_client import ConfigClient
 from .menu import Menu
 from .game_menu import GameMenu
 
@@ -10,7 +9,8 @@ class MainMenu(Menu):
         super().__init__()
         self.running = True
         self.title = "Main-Menu"
-        self.auth_service = auth_service
+        self.auth_client = auth_client
+        self.cfg_client = ConfigClient()
         self.action_list: list[dict[str:callable]] = [
             {"hotkey": "1", "name": "play", "action": self._play},
             {"hotkey": "2", "name": "test", "action": self._test},
@@ -23,9 +23,9 @@ class MainMenu(Menu):
 
     def _print_user_info(self) -> None:
         print(
-            f"User-ID: {self.auth_service.get_user_id()} \n"
-            f"Username: {self.auth_service.get_username()} \n"
-            f"Created at: {self.auth_service.get_user_created_at()}"
+            f"User-ID: {self.auth_client.get_user_id()} \n"
+            f"Username: {self.auth_client.get_username()} \n"
+            f"Created at: {self.auth_client.get_user_created_at()}"
         )
 
     # -- ACTIONS -- #
@@ -35,7 +35,7 @@ class MainMenu(Menu):
         game_menu.run()
 
     def _test(self):
-        print(self.auth_service)
+        print(self.auth_client)
         input()
 
     def _profile(self):
@@ -47,8 +47,7 @@ class MainMenu(Menu):
         input()
 
     def _settings(self):
-        cfg_service = ConfigService()
-        cfg_service.change_key("Logging", "DEV_MODE", "0")
+        self.cfg_client.toggle_dev_mode()
         input()
 
     def _logout(self):

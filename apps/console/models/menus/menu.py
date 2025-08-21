@@ -24,6 +24,7 @@ class Menu(ABC):
     def __init__(self) -> None:
         self.running: bool = True
         self.title: str
+        self.action_list: list[Action]
 
     # ----- Helpers (concrete) -----
 
@@ -41,8 +42,8 @@ class Menu(ABC):
     def _get_user_choice(self) -> str:
         return get_user_choice()
 
-    def _match_choice(self, choice: str) -> None:
-        for action in self.action_list:
+    def _match_choice(self, choice: str, action_list: list[Action]) -> None:
+        for action in action_list:
             if action["hotkey"] == choice:
                 action["action"]()
                 break  # stop at first match
@@ -64,7 +65,7 @@ class Menu(ABC):
             self._print_header()
             self._print_actions()
             choice = self._get_user_choice().strip()
-            self._match_choice(choice)
+            self._match_choice(choice, self.action_list)
 
     def __repr__(self) -> str:
         actions_string = " - ".join(
